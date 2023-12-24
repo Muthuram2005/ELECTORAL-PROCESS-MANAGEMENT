@@ -1,0 +1,176 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+class ElectionManager {
+    private Map<String, Candidate> candidates;
+    private Map<String, Voter> voters;
+    
+public ElectionManager() {
+        candidates = new HashMap<>();
+        voters = new HashMap<>();
+    }
+
+    public void addCandidate(String candidateId, String candidateName) {
+        candidates.put(candidateId, new Candidate(candidateId, candidateName));
+    }
+
+    public void registerVoter(String voterId, String voterName) {
+        voters.put(voterId, new Voter(voterId, voterName));
+    }
+
+  public void castVote(String voterId, String candidateId) {
+    if (voters.containsKey(voterId) && candidates.containsKey(candidateId)) {
+        Voter voter = voters.get(voterId);
+        if (!voter.hasVoted()) {
+            Candidate candidate = candidates.get(candidateId);
+            candidate.incrementVotes();
+            voter.setHasVoted(true);
+            System.out.println(voter.getName() + " voted for " + 
+             candidate.getName());
+        }
+        else {
+            System.out.println("Voter " + voterId + " has already voted.");
+        }
+    } 
+else {
+        System.out.println("Invalid voter or candidate ID.");
+    }
+}
+
+public void displayVoters(String voterId) 
+ {
+        if (voters.containsKey(voterId)) {
+            Voter voter = voters.get(voterId);
+            System.out.println("Voter Details:");
+            System.out.println("Voter ID: " + voter.getId());
+            System.out.println("Voter Name: " + voter.getName());
+        }
+          else{
+            System.out.println("Voter with ID " + voterId + " not found.");
+        }
+    }
+
+    public void displayResults() {
+        System.out.println("Election Results:");
+        for (Candidate candidate : candidates.values()) {
+            System.out.println(candidate.getName() + ": " + candidate.getVotes() + " votes");
+        }
+    }
+}
+
+class Candidate {
+    private String id;
+    private String name;
+    private int votes;
+
+    public Candidate(String id, String name) {
+        this.id = id;
+        this.name = name;
+        this.votes = 0;
+}
+
+public String getId() {
+        return id;
+    }
+
+public String getName() {
+        return name;
+    }
+
+public int getVotes() {
+        return votes;
+    }
+
+    public void incrementVotes() {
+        votes++;
+    }
+}
+
+
+class Voter {
+    private String id;
+    private String name;
+    private boolean hasVoted;
+
+    public Voter(String id, String name) {
+        this.id = id;
+        this.name = name;
+        this.hasVoted = false;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean hasVoted() {
+        return hasVoted;
+    }
+
+    public void setHasVoted(boolean hasVoted) {
+        this.hasVoted = hasVoted;
+    }
+   }
+
+public class Voters {
+    public static void main(String[] args) {
+        ElectionManager electionManager = new ElectionManager();
+        Scanner scanner = new Scanner(System.in);
+
+         // Add candidates
+       electionManager.addCandidate("1", "ALAN YT");
+       electionManager.addCandidate("2", "SWEETY");
+       electionManager.addCandidate("3", "MR BLACK");
+       electionManager.addCandidate("4", "TFG SINGAM");
+
+        // Register voters
+       electionManager.registerVoter("1", "MUTHU");
+       electionManager.registerVoter("2", "SIDDHU");
+       electionManager.registerVoter("3", "RAM");
+       electionManager.registerVoter("4", "KUMAR");
+       electionManager.registerVoter("5", "SAMI");
+      
+        // User interface
+        while (true) 
+        {
+        System.out.println("1. Cast Vote");
+        System.out.println("2. Display Results");
+        System.out.println("3. Checking Voters Details");
+        System.out.println("4. Exit");
+        System.out.print("Select an option: ");
+       int choice = scanner.nextInt();
+       scanner.nextLine(); 
+
+       switch (choice) 
+        {
+            case 1:
+                System.out.print("Enter voter ID: ");
+                    String voterId = scanner.nextLine();
+                    System.out.print("Enter candidate ID: ");
+                    String candidateId = scanner.nextLine();
+                    electionManager.castVote(voterId, candidateId);
+                    break;
+            
+            case 2:
+                electionManager.displayResults();
+                break;
+          
+            case 3:
+                System.out.print("Enter the VoterId:");
+                String V = scanner.nextLine();
+                electionManager.displayVoters(V);
+                break;
+            case 4:
+                System.out.println("Exiting the program.");
+                scanner.close();
+                System.exit(0);
+            default:
+                System.out.println("Invalid choice. Please try again.");
+        }
+    }
+}
+}
